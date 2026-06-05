@@ -20,6 +20,7 @@ return {
         ["<CR>"] = cmp.mapping.confirm({ select = true }),
       }),
       sources = cmp.config.sources({
+	{ name = "copilot" },
         { name = "nvim_lsp" },
         { name = "buffer" },
         { name = "path" },
