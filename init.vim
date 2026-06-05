@@ -1,5 +1,5 @@
 language en_US
-lua require('config')
+lua dofile(vim.fn.stdpath('config') .. '/config.lua')
 :set number " show line numbers
 :set relativenumber " show line number on the current line relative to other lines
 :set autoindent " sets newline to inherit the indentation of prev lines
