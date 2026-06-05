@@ -14,32 +14,30 @@ return {
     local lsp = vim.lsp
 
     -- Define server config
-    lsp.config.lua_ls = {
+    lsp.config("lua_ls", {
       settings = {
         Lua = {
           diagnostics = { globals = { "vim" } },
           workspace = { checkThirdParty = false },
         },
       },
-    }
+    })
 
-        -- Go
-    lsp.config.gopls = {}
+    -- Go
+    lsp.config("gopls", {})
 
     -- TypeScript / JavaScript
-    lsp.config.tsserver = {}
+    lsp.config("ts_ls", {})
 
     -- Angular
-    lsp.config.angularls = {
+    lsp.config("angularls", {
       on_new_config = function(new_config, root_dir)
         new_config.cmd = { "ngserver", "--stdio", "--tsProbeLocations", root_dir, "--ngProbeLocations", root_dir }
       end,
-    }
+    })
 
-    -- Start servers automatically
-    for _, server in ipairs({ "lua_ls", "gopls", "tsserver", "angularls" }) do
-      lsp.start(lsp.config[server])
-    end
+    -- Enable servers automatically for matching buffers.
+    lsp.enable({ "lua_ls", "gopls", "ts_ls", "angularls" })
   end,
 }
 
