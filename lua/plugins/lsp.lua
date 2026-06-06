@@ -32,7 +32,7 @@ return {
 
     require("mason").setup()
     require("mason-lspconfig").setup({
-     ensure_installed = { "lua_ls", "gopls", "ts_ls", "angularls" },
+     ensure_installed = { "lua_ls", "gopls", "ts_ls", "angularls", "cssls" },
     })
 
     -- NEW Neovim 0.11 API
@@ -61,8 +61,10 @@ return {
       end,
     })
 
+    -- CSS
+    lsp.config("cssls", {})
+
     -- Enable servers automatically for matching buffers.
-    lsp.enable({ "lua_ls", "gopls", "ts_ls", "angularls" })
+    lsp.enable({ "lua_ls", "gopls", "ts_ls", "angularls", "cssls" })
   end,
 }
-
