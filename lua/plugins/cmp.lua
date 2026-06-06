@@ -8,6 +8,35 @@ return {
   },
   config = function()
     local cmp = require("cmp")
+
+    local function strip_css_baseline_blob(text)
+      if type(text) ~= "string" then
+        return text
+      end
+
+      return text
+        :gsub("!?%[[^%]]+%]%(%s*data:image[^)]+%)[ \t]*", "")
+    end
+
+    local function sanitize_completion_item(entry)
+      local item = entry and entry.completion_item
+      if not item then
+        return
+      end
+
+      item.detail = strip_css_baseline_blob(item.detail)
+
+      if type(item.documentation) == "table" then
+        item.documentation.value = strip_css_baseline_blob(item.documentation.value)
+      elseif type(item.documentation) == "string" then
+        item.documentation = strip_css_baseline_blob(item.documentation)
+      end
+
+      if item.labelDetails and type(item.labelDetails.description) == "string" then
+        item.labelDetails.description = strip_css_baseline_blob(item.labelDetails.description)
+      end
+    end
+
     cmp.setup({
       snippet = {
         expand = function(args)
@@ -24,7 +53,14 @@ return {
         { name = "buffer" },
         { name = "path" },
       }),
+      formatting = {
+        format = function(entry, vim_item)
+          sanitize_completion_item(entry)
+          vim_item.abbr = strip_css_baseline_blob(vim_item.abbr)
+          vim_item.menu = strip_css_baseline_blob(vim_item.menu)
+          return vim_item
+        end,
+      },
     })
   end,
 }
-
