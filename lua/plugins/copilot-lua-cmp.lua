@@ -1,5 +1,6 @@
 return {
   "zbirenbaum/copilot-cmp",
+  enabled = false,
   dependencies = { "zbirenbaum/copilot.lua" },
   config = function()
     local ok, source = pcall(require, "copilot_cmp.source")

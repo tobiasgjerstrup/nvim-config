@@ -12,6 +12,7 @@ lua dofile(vim.fn.stdpath('config') .. '/config.lua')
 :set smartcase " set shiftround: When shifting lines, round the indentation to the nearest multiple of shiftwidth.
 :set hlsearch " enable highlighting when searching
 :set wrap "text wrapping
+:set whichwrap+=<,>,[,]
 :set laststatus=2 
 :set foldmethod=indent
 :set foldnestmax=3

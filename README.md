@@ -1,31 +1,84 @@
 # Neovim Config
 
-Small Neovim config built on top of `lazy.nvim`.
+Small Neovim setup built on top of `lazy.nvim`.
 
 ## Included
 
 - `lazy.nvim` for plugin management
-- `nvim-tree` for a file tree
+- `nvim-tree` for file tree navigation
 - `telescope.nvim` for fuzzy finding
-- `bufferline.nvim` for VS Code-style buffer tabs
-- `nvim-lspconfig` + `mason.nvim` for LSP setup
+- `bufferline.nvim` for buffer tabs
+- `nvim-lspconfig` + `mason.nvim` + `mason-lspconfig.nvim` for LSP setup
 - `nvim-cmp` + `LuaSnip` for completion
-- `copilot.lua` + `copilot-cmp` for GitHub Copilot
+- `copilot.lua` for GitHub Copilot ghost-text suggestions
 - `nvim-treesitter` for syntax highlighting and indentation
 
 ## Requirements
 
 - Neovim `0.11+`
 - `git`
-- A Nerd Font if you want file icons to render correctly
-- Language servers or toolchains used by your projects
+- A Nerd Font for icon rendering in some plugins
+- Language servers/toolchains for the languages you work with
 
-This config uses `mason.nvim` to install these LSP servers:
+## LSP Servers
+
+Installed automatically via `mason-lspconfig`:
 
 - `lua_ls`
 - `gopls`
 - `ts_ls`
 - `angularls`
+
+## Diagnostics
+
+Diagnostics are configured in an Error Lens-like style:
+
+- Warnings and errors are always shown inline (`virtual_text`)
+- Warnings and errors are always shown in the sign column (`W` and `E`)
+- Warnings and errors are underlined
+- Diagnostics update while typing (`update_in_insert = true`)
+
+## Copilot
+
+Copilot is configured for inline ghost text, not `nvim-cmp` dropdown completion.
+
+Insert-mode Copilot keymaps:
+
+- `Ctrl+l` accept suggestion
+- `Ctrl+j` next suggestion
+- `Ctrl+k` previous suggestion
+- `Ctrl+x` dismiss suggestion
+
+## Leader Key
+
+Leader is set to `Space`.
+
+## Keymaps
+
+Normal mode:
+
+- `Ctrl+b` toggle file tree
+- `Space ff` find files
+- `Space fg` live grep
+- `Space fb` list buffers
+- `Space fh` help tags
+- `Shift+e` next buffer
+- `Shift+q` previous buffer
+- `Shift+w` delete buffer
+
+Insert mode:
+
+- `Tab` next completion item
+- `Shift+Tab` previous completion item
+- `Enter` confirm completion
+- `Ctrl+Backspace` delete previous word
+	- Fallbacks included for terminal differences: `<C-BS>`, `<C-Backspace>`, and `<C-h>`
+
+## Editor Behavior
+
+- Relative line numbers enabled
+- 4-space indentation (`tabstop`, `shiftwidth`, `softtabstop`)
+- Arrow keys wrap across lines using `whichwrap+=<,>,[,]`
 
 ## Install
 
@@ -37,39 +90,9 @@ Windows:
 git clone <your-repo-url> "$env:LOCALAPPDATA/nvim"
 ```
 
-Then start Neovim once. `lazy.nvim` will install plugins automatically.
-
-## Leader Key
-
-The leader key is set to `Space`.
-
-## Keymaps
-
-### Navigation
-
-- `Ctrl+b` Toggle file tree
-
-### Telescope
-
-- `Space ff` Find files
-- `Space fg` Live grep
-- `Space fb` List buffers
-- `Space fh` Search help tags
-
-### Buffer Tabs
-
-- `Shift+e` Next buffer
-- `Shift+q` Previous buffer
-- `Shift+w` Delete current buffer
-
-### Completion
-
-- `Tab` Next completion item
-- `Shift+Tab` Previous completion item
-- `Enter` Confirm completion
+Start Neovim once and `lazy.nvim` will install plugins automatically.
 
 ## Notes
 
-- Icons in `nvim-tree` and `bufferline` require a Nerd Font such as `FiraCode Nerd Font`.
-- Copilot completion is wired into `nvim-cmp`.
-- This config uses the Neovim `0.11+` LSP API with `vim.lsp.config()` and `vim.lsp.enable()`.
+- This config uses the Neovim `0.11+` LSP API via `vim.lsp.config()` and `vim.lsp.enable()`.
+- If `Ctrl+Backspace` still behaves differently in your terminal, map an additional keycode variant in `lua/config/keymaps.lua`.

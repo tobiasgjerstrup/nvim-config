@@ -5,6 +5,31 @@ return {
     "williamboman/mason-lspconfig.nvim",
   },
   config = function()
+    -- Error Lens-style diagnostics: always show messages inline and in the sign column.
+    vim.diagnostic.config({
+      virtual_text = {
+        spacing = 2,
+        source = "if_many",
+        prefix = "->",
+        severity = { min = vim.diagnostic.severity.WARN },
+      },
+      signs = {
+        severity = { min = vim.diagnostic.severity.WARN },
+      },
+      underline = {
+        severity = { min = vim.diagnostic.severity.WARN },
+      },
+      update_in_insert = true,
+      severity_sort = true,
+      float = {
+        source = "always",
+        border = "rounded",
+      },
+    })
+
+    vim.fn.sign_define("DiagnosticSignError", { text = "E", texthl = "DiagnosticSignError", numhl = "" })
+    vim.fn.sign_define("DiagnosticSignWarn", { text = "W", texthl = "DiagnosticSignWarn", numhl = "" })
+
     require("mason").setup()
     require("mason-lspconfig").setup({
      ensure_installed = { "lua_ls", "gopls", "ts_ls", "angularls" },
