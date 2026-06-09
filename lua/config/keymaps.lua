@@ -33,3 +33,14 @@ vim.keymap.set("i", "<C-BS>", "<C-w>", { silent = true, desc = "Delete previous 
 vim.keymap.set("i", "<C-Backspace>", "<C-w>", { silent = true, desc = "Delete previous word" })
 vim.keymap.set("i", "<C-h>", "<C-w>", { silent = true, desc = "Delete previous word" })
 
+-- LSP keybindings
+vim.api.nvim_create_autocmd("LspAttach", {
+  callback = function(args)
+    local bufnr = args.buf
+    vim.keymap.set("n", "gd", vim.lsp.buf.definition, { buffer = bufnr, desc = "Go to definition" })
+    vim.keymap.set("n", "gD", vim.lsp.buf.declaration, { buffer = bufnr, desc = "Go to declaration" })
+    vim.keymap.set("n", "gi", vim.lsp.buf.implementation, { buffer = bufnr, desc = "Go to implementation" })
+    vim.keymap.set("n", "gr", vim.lsp.buf.references, { buffer = bufnr, desc = "Go to references" })
+    vim.keymap.set("n", "K", vim.lsp.buf.hover, { buffer = bufnr, desc = "Hover" })
+  end,
+})
