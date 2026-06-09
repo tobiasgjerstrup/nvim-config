@@ -1,5 +1,13 @@
 language en_US
 lua dofile(vim.fn.stdpath('config') .. '/config.lua')
+lua vim.g.go_highlight_functions = 1
+lua vim.g.go_highlight_function_parameters = 1
+lua vim.g.go_highlight_function_calls = 1
+lua vim.g.go_highlight_fields = 1
+lua vim.g.go_highlight_types = 1
+lua vim.g.go_highlight_extra_types = 1
+lua vim.g.go_highlight_variable_assignments = 1
+lua vim.g.go_highlight_variable_declarations = 1
 :set number " show line numbers
 :set relativenumber " show line number on the current line relative to other lines
 :set autoindent " sets newline to inherit the indentation of prev lines
