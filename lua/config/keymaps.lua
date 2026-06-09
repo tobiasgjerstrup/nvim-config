@@ -11,6 +11,7 @@ vim.keymap.set("n", "<leader>fh", "<cmd>Telescope help_tags<cr>", { silent = tru
 vim.keymap.set("n", "<S-e>", "<cmd>BufferLineCycleNext<cr>", { silent = true, desc = "Next buffer" })
 vim.keymap.set("n", "<S-q>", "<cmd>BufferLineCyclePrev<cr>", { silent = true, desc = "Previous buffer" })
 vim.keymap.set("n", "<S-w>", "<cmd>bdelete<cr>", { silent = true, desc = "Delete buffer" })
+vim.keymap.set("n", "<C-w>", "<cmd>bdelete!<cr>", { silent = true, desc = "Force delete buffer" })
 
 -- Workspace keybindings
 local workspaces = require("config.workspaces")
