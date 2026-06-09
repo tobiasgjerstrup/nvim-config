@@ -2,6 +2,23 @@ local M = {}
 
 local workspace_dir = vim.fn.stdpath("data") .. "/workspaces"
 vim.fn.mkdir(workspace_dir, "p")
+local current_workspace = nil
+
+local function get_workspace_names()
+  local workspaces = vim.fn.glob(workspace_dir .. "/*.vim", false, true)
+  table.sort(workspaces)
+
+  local names = {}
+  for _, ws in ipairs(workspaces) do
+    table.insert(names, vim.fn.fnamemodify(ws, ":t:r"))
+  end
+  return names
+end
+
+local function set_current_workspace(name)
+  current_workspace = name
+  vim.cmd("redrawtabline")
+end
 
 local function get_buffers()
   local bufs = {}
@@ -23,6 +40,7 @@ function M.save(name)
 
   local workspace_file = workspace_dir .. "/" .. name .. ".vim"
   vim.cmd("mksession! " .. workspace_file)
+  set_current_workspace(name)
   vim.notify("Workspace '" .. name .. "' saved!", vim.log.levels.INFO)
 end
 
@@ -53,6 +71,7 @@ function M.load(name)
     vim.cmd("%bdelete!")
     -- Load the workspace
     vim.cmd("source " .. workspace_file)
+    set_current_workspace(name)
     vim.notify("Workspace '" .. name .. "' loaded!", vim.log.levels.INFO)
   else
     vim.notify("Workspace '" .. name .. "' not found", vim.log.levels.WARN)
@@ -70,6 +89,11 @@ function M.delete(name)
   local workspace_file = workspace_dir .. "/" .. name .. ".vim"
   if vim.fn.filereadable(workspace_file) == 1 then
     vim.fn.delete(workspace_file)
+    if current_workspace == name then
+      set_current_workspace(nil)
+    else
+      vim.cmd("redrawtabline")
+    end
     vim.notify("Workspace '" .. name .. "' deleted!", vim.log.levels.INFO)
   else
     vim.notify("Workspace '" .. name .. "' not found", vim.log.levels.WARN)
@@ -77,15 +101,34 @@ function M.delete(name)
 end
 
 function M.list()
-  local workspaces = vim.fn.glob(workspace_dir .. "/*.vim", false, true)
-  if #workspaces == 0 then
+  local names = get_workspace_names()
+  if #names == 0 then
     vim.notify("No workspaces found", vim.log.levels.WARN)
     return
   end
   
-  for _, ws in ipairs(workspaces) do
-    print(vim.fn.fnamemodify(ws, ":t:r"))
+  for _, name in ipairs(names) do
+    print(name)
   end
+end
+
+function M.current()
+  return current_workspace
+end
+
+function M.all_display()
+  local names = get_workspace_names()
+  if #names == 0 then
+    return "WS -"
+  end
+
+  local items = {}
+  for i, name in ipairs(names) do
+    local suffix = name == current_workspace and "*" or ""
+    table.insert(items, i .. ":" .. name .. suffix)
+  end
+
+  return "WS " .. table.concat(items, " | ")
 end
 
 return M
