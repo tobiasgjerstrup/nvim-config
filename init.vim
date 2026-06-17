@@ -25,3 +25,6 @@ lua vim.g.go_highlight_variable_declarations = 1
 :set foldmethod=indent
 :set foldnestmax=3
 :set history=1000
+
+set exrc "Automatically run .nvim.lua files in the current directory. This is useful for project-specific configurations."
+set secure "Forces you to confirm before executing commands in .nvim.lua. Open the file and run :trust to allow it to execute without confirmation in the future."
