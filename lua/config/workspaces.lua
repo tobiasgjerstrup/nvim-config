@@ -48,6 +48,7 @@ local config = load_config()
 local current_workspace = config.current
 
 local _cached_names = nil
+local _click_handlers_set = false
 
 local function get_workspace_names()
   if _cached_names then
@@ -67,7 +68,29 @@ end
 
 local function invalidate_cache()
   _cached_names = nil
+  _click_handlers_set = false
 end
+
+local function setup_click_handlers()
+  for i = 1, 99 do
+    pcall(vim.cmd, "delfunction! __ws_click_" .. i)
+  end
+
+  local names = get_workspace_names()
+  for i, _ in ipairs(names) do
+    vim.cmd(string.format(
+      "function! __ws_click_%d(minwid, clicks, button, _) abort\n" ..
+      "  if a:clicks == 1 && a:button ==# 'l'\n" ..
+      "    lua require('config.workspaces').load_by_index(%d)\n" ..
+      "  endif\n" ..
+      "endfunction",
+      i, i
+    ))
+  end
+  _click_handlers_set = true
+end
+
+setup_click_handlers()
 
 local function set_current_workspace(name)
   current_workspace = name
@@ -169,6 +192,10 @@ function M.current()
 end
 
 function M.all_display()
+  if not _click_handlers_set then
+    setup_click_handlers()
+  end
+
   local names = get_workspace_names()
   if #names == 0 then
     return "WS -"
@@ -177,7 +204,8 @@ function M.all_display()
   local items = {}
   for i, name in ipairs(names) do
     local suffix = name == current_workspace and "*" or ""
-    table.insert(items, i .. ":" .. name .. suffix)
+    local label = i .. ":" .. name .. suffix
+    table.insert(items, "%@__ws_click_" .. i .. "@" .. label .. "%X")
   end
 
   return "WS " .. table.concat(items, " | ")
