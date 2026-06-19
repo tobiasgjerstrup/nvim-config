@@ -23,16 +23,7 @@ vim.keymap.set("n", "<leader>wn", function() workspaces.list() end, { silent = t
 -- Quick access to numbered workspaces
 for i = 1, 9 do
   vim.keymap.set("n", "<leader>w" .. i, function()
-    local workspace_dir = vim.fn.stdpath("data") .. "/workspaces"
-    local workspace_list = vim.fn.glob(workspace_dir .. "/*.vim", false, true)
-    table.sort(workspace_list)
-    
-    if i <= #workspace_list then
-      local ws_name = vim.fn.fnamemodify(workspace_list[i], ":t:r")
-      workspaces.load(ws_name)
-    else
-      vim.notify("Workspace " .. i .. " not found", vim.log.levels.WARN)
-    end
+    workspaces.load_by_index(i)
   end, { silent = true, desc = "Load workspace " .. i })
 end
 

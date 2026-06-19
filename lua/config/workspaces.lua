@@ -1,33 +1,80 @@
 local M = {}
 
-local workspace_dir = vim.fn.stdpath("data") .. "/workspaces"
-vim.fn.mkdir(workspace_dir, "p")
-local current_workspace = nil
+local _project_root = nil
+
+local function project_root()
+  if _project_root then
+    return _project_root
+  end
+  local root = vim.fn.finddir(".git", vim.fn.getcwd() .. ";")
+  if root ~= "" then
+    _project_root = vim.fn.fnamemodify(root, ":h")
+  else
+    _project_root = vim.fn.getcwd()
+  end
+  return _project_root
+end
+
+local function workspace_dir()
+  local dir = project_root() .. "/.nvim/workspaces"
+  vim.fn.mkdir(dir, "p")
+  return dir
+end
+
+local function config_path()
+  return project_root() .. "/.nvim/workspaces.json"
+end
+
+local function load_config()
+  local path = config_path()
+  if vim.fn.filereadable(path) == 1 then
+    local content = table.concat(vim.fn.readfile(path), "\n")
+    local ok, data = pcall(vim.json.decode, content)
+    if ok and type(data) == "table" then
+      return data
+    end
+  end
+  return {}
+end
+
+local function save_config(data)
+  local root = project_root()
+  vim.fn.mkdir(root .. "/.nvim", "p")
+  local path = config_path()
+  vim.fn.writefile({ vim.json.encode(data) }, path)
+end
+
+local config = load_config()
+local current_workspace = config.current
+
+local _cached_names = nil
 
 local function get_workspace_names()
-  local workspaces = vim.fn.glob(workspace_dir .. "/*.vim", false, true)
+  if _cached_names then
+    return _cached_names
+  end
+  local dir = workspace_dir()
+  local workspaces = vim.fn.glob(dir .. "/*.vim", false, true)
   table.sort(workspaces)
 
   local names = {}
   for _, ws in ipairs(workspaces) do
     table.insert(names, vim.fn.fnamemodify(ws, ":t:r"))
   end
+  _cached_names = names
   return names
+end
+
+local function invalidate_cache()
+  _cached_names = nil
 end
 
 local function set_current_workspace(name)
   current_workspace = name
+  local cfg = load_config()
+  cfg.current = name
+  save_config(cfg)
   vim.cmd("redrawtabline")
-end
-
-local function get_buffers()
-  local bufs = {}
-  for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-    if vim.api.nvim_buf_is_loaded(buf) and vim.api.nvim_buf_get_name(buf) ~= "" then
-      table.insert(bufs, vim.api.nvim_buf_get_name(buf))
-    end
-  end
-  return bufs
 end
 
 function M.save(name)
@@ -38,25 +85,29 @@ function M.save(name)
     return
   end
 
-  local workspace_file = workspace_dir .. "/" .. name .. ".vim"
+  local dir = workspace_dir()
+  local workspace_file = dir .. "/" .. name .. ".vim"
   vim.cmd("mksession! " .. workspace_file)
+  invalidate_cache()
   set_current_workspace(name)
   vim.notify("Workspace '" .. name .. "' saved!", vim.log.levels.INFO)
 end
 
 function M.load(name)
   if not name or name == "" then
-    local workspaces = vim.fn.glob(workspace_dir .. "/*.vim", false, true)
+    local dir = workspace_dir()
+    local workspaces = vim.fn.glob(dir .. "/*.vim", false, true)
+    table.sort(workspaces)
     if #workspaces == 0 then
       vim.notify("No workspaces found", vim.log.levels.WARN)
       return
     end
-    
+
     local choices = {}
     for _, ws in ipairs(workspaces) do
       table.insert(choices, vim.fn.fnamemodify(ws, ":t:r"))
     end
-    
+
     vim.ui.select(choices, { prompt = "Load workspace: " }, function(choice)
       if choice then
         M.load(choice)
@@ -65,11 +116,10 @@ function M.load(name)
     return
   end
 
-  local workspace_file = workspace_dir .. "/" .. name .. ".vim"
+  local dir = workspace_dir()
+  local workspace_file = dir .. "/" .. name .. ".vim"
   if vim.fn.filereadable(workspace_file) == 1 then
-    -- Close all buffers first
     vim.cmd("%bdelete!")
-    -- Load the workspace
     vim.cmd("source " .. workspace_file)
     set_current_workspace(name)
     vim.notify("Workspace '" .. name .. "' loaded!", vim.log.levels.INFO)
@@ -86,9 +136,11 @@ function M.delete(name)
     return
   end
 
-  local workspace_file = workspace_dir .. "/" .. name .. ".vim"
+  local dir = workspace_dir()
+  local workspace_file = dir .. "/" .. name .. ".vim"
   if vim.fn.filereadable(workspace_file) == 1 then
     vim.fn.delete(workspace_file)
+    invalidate_cache()
     if current_workspace == name then
       set_current_workspace(nil)
     else
@@ -106,7 +158,7 @@ function M.list()
     vim.notify("No workspaces found", vim.log.levels.WARN)
     return
   end
-  
+
   for _, name in ipairs(names) do
     print(name)
   end
@@ -129,6 +181,15 @@ function M.all_display()
   end
 
   return "WS " .. table.concat(items, " | ")
+end
+
+function M.load_by_index(i)
+  local names = get_workspace_names()
+  if i > #names then
+    vim.notify("Workspace " .. i .. " not found", vim.log.levels.WARN)
+    return
+  end
+  M.load(names[i])
 end
 
 return M
