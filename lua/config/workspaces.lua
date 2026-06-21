@@ -16,13 +16,19 @@ local function project_root()
 end
 
 local function workspace_dir()
-  local dir = project_root() .. "/.nvim/workspaces"
+  local root = project_root()
+  local gitignore = root .. "/.nvim/local/.gitignore"
+  if vim.fn.filereadable(gitignore) ~= 1 then
+    vim.fn.mkdir(root .. "/.nvim/local", "p")
+    vim.fn.writefile({ "*" }, gitignore)
+  end
+  local dir = root .. "/.nvim/local/workspaces"
   vim.fn.mkdir(dir, "p")
   return dir
 end
 
 local function config_path()
-  return project_root() .. "/.nvim/workspaces.json"
+  return project_root() .. "/.nvim/local/workspaces.json"
 end
 
 local function load_config()
@@ -39,7 +45,7 @@ end
 
 local function save_config(data)
   local root = project_root()
-  vim.fn.mkdir(root .. "/.nvim", "p")
+  vim.fn.mkdir(root .. "/.nvim/local", "p")
   local path = config_path()
   vim.fn.writefile({ vim.json.encode(data) }, path)
 end
