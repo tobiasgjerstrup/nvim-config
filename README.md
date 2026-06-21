@@ -19,6 +19,7 @@ Small Neovim setup built on top of `lazy.nvim`.
 - `git`
 - A Nerd Font for icon rendering in some plugins
 - Language servers/toolchains for the languages you work with
+- tree-sitter-cli `npm install -g tree-sitter-cli`
 
 ## LSP Servers
 

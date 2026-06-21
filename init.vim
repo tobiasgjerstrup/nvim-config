@@ -1,4 +1,8 @@
-language en_US
+if has('win32')
+  language en_US
+else
+  language en_US.UTF-8
+endif
 lua dofile(vim.fn.stdpath('config') .. '/config.lua')
 lua vim.g.go_highlight_functions = 1
 lua vim.g.go_highlight_function_parameters = 1
