@@ -8,6 +8,10 @@ vim.keymap.set("n", "<leader>fh", "<cmd>Telescope help_tags<cr>", { silent = tru
 --  require("telescope").extensions.extension_live_grep()
 --end, { desc = "Live grep by extension" })
 
+-- Diagnostic browsing
+vim.keymap.set("n", "<leader>fd", "<cmd>Telescope diagnostics<cr>", { silent = true, desc = "Find diagnostics" })
+vim.keymap.set("n", "<leader>fq", function() vim.diagnostic.setqflist() end, { silent = true, desc = "Diagnostics to quickfix" })
+
 vim.keymap.set("n", "<S-e>", "<cmd>BufferLineCycleNext<cr>", { silent = true, desc = "Next buffer" })
 vim.keymap.set("n", "<S-q>", "<cmd>BufferLineCyclePrev<cr>", { silent = true, desc = "Previous buffer" })
 vim.keymap.set("n", "<S-w>", "<cmd>bdelete<cr>", { silent = true, desc = "Delete buffer" })
@@ -57,5 +61,11 @@ vim.api.nvim_create_autocmd("LspAttach", {
     vim.keymap.set("n", "gi", vim.lsp.buf.implementation, { buffer = bufnr, desc = "Go to implementation" })
     vim.keymap.set("n", "gr", vim.lsp.buf.references, { buffer = bufnr, desc = "Go to references" })
     vim.keymap.set("n", "K", vim.lsp.buf.hover, { buffer = bufnr, desc = "Hover" })
+    vim.keymap.set("n", "[d", function() vim.diagnostic.goto_prev() end, { buffer = bufnr, desc = "Previous diagnostic" })
+    vim.keymap.set("n", "]d", function() vim.diagnostic.goto_next() end, { buffer = bufnr, desc = "Next diagnostic" })
+    vim.keymap.set("n", "[e", function() vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.ERROR }) end, { buffer = bufnr, desc = "Previous error" })
+    vim.keymap.set("n", "]e", function() vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.ERROR }) end, { buffer = bufnr, desc = "Next error" })
+    vim.keymap.set("n", "[w", function() vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.WARN }) end, { buffer = bufnr, desc = "Previous warning" })
+    vim.keymap.set("n", "]w", function() vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.WARN }) end, { buffer = bufnr, desc = "Next warning" })
   end,
 })
