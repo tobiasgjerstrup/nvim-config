@@ -11,13 +11,13 @@ return {
         spacing = 2,
         source = "if_many",
         prefix = "->",
-        severity = { min = vim.diagnostic.severity.WARN },
+        severity = { min = vim.diagnostic.severity.HINT },
       },
       signs = {
-        severity = { min = vim.diagnostic.severity.WARN },
+        severity = { min = vim.diagnostic.severity.HINT },
       },
       underline = {
-        severity = { min = vim.diagnostic.severity.WARN },
+        severity = { min = vim.diagnostic.severity.HINT },
       },
       update_in_insert = true,
       severity_sort = true,
@@ -29,6 +29,8 @@ return {
 
     vim.fn.sign_define("DiagnosticSignError", { text = "E", texthl = "DiagnosticSignError", numhl = "" })
     vim.fn.sign_define("DiagnosticSignWarn", { text = "W", texthl = "DiagnosticSignWarn", numhl = "" })
+    vim.fn.sign_define("DiagnosticSignInfo", { text = "I", texthl = "DiagnosticSignInfo", numhl = "" })
+    vim.fn.sign_define("DiagnosticSignHint", { text = "H", texthl = "DiagnosticSignHint", numhl = "" })
 
     require("mason").setup()
     require("mason-lspconfig").setup({
