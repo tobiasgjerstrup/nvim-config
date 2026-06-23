@@ -514,8 +514,21 @@ theme.set_highlights = function(opts)
     hl(0, 'NvimTreeGitNew', { fg = c.vscGitAdded, bg = 'NONE' })
 
     -- Bufferline
-    hl(0, 'BufferLineIndicatorSelected', { fg = c.vscLeftDark, bg = 'NONE' })
-    hl(0, 'BufferLineFill', { fg = 'NONE', bg = opts.transparent and c.vscBack or c.vscLeftDark })
+    local bufferline_bg = opts.transparent and c.vscBack or c.vscLeftDark
+    hl(0, 'BufferLineFill', { fg = 'NONE', bg = bufferline_bg })
+    hl(0, 'BufferLineBackground', { fg = c.vscGray, bg = bufferline_bg })
+    hl(0, 'BufferLineBufferVisible', { fg = c.vscFront, bg = c.vscTabOther })
+    hl(0, 'BufferLineBufferSelected', { fg = c.vscFront, bg = c.vscTabCurrent, bold = true })
+    hl(0, 'BufferLineCloseButton', { fg = c.vscGray, bg = bufferline_bg })
+    hl(0, 'BufferLineCloseButtonVisible', { fg = c.vscGray, bg = c.vscTabOther })
+    hl(0, 'BufferLineCloseButtonSelected', { fg = c.vscFront, bg = c.vscTabCurrent })
+    hl(0, 'BufferLineModified', { fg = c.vscYellowOrange, bg = bufferline_bg })
+    hl(0, 'BufferLineModifiedVisible', { fg = c.vscYellowOrange, bg = c.vscTabOther })
+    hl(0, 'BufferLineModifiedSelected', { fg = c.vscYellowOrange, bg = c.vscTabCurrent })
+    hl(0, 'BufferLineIndicatorSelected', { fg = c.vscBlue, bg = c.vscTabCurrent })
+    hl(0, 'BufferLineSeparator', { fg = bufferline_bg, bg = bufferline_bg })
+    hl(0, 'BufferLineSeparatorVisible', { fg = c.vscTabOther, bg = c.vscTabOther })
+    hl(0, 'BufferLineSeparatorSelected', { fg = c.vscTabCurrent, bg = c.vscTabCurrent })
 
     -- BarBar
     hl(0, 'BufferCurrent', { fg = c.vscFront, bg = c.vscTabCurrent })
