@@ -23,7 +23,11 @@ theme.load = function(style)
 
     local background = style or config.opts.style
     if background then
-        vim.o.background = background
+        if background == 'purple' then
+            vim.o.background = 'dark'
+        else
+            vim.o.background = background
+        end
     end
 
     colors.set_highlights(config.opts)

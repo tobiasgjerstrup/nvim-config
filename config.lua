@@ -5,7 +5,7 @@ vim.o.termguicolors = true
 
 local theme = require("theme")
 theme.setup({
-	style = "dark",
+	style = "purple",
 	transparent = false,
 	italic_comments = true,
 	italic_inlayhints = false,

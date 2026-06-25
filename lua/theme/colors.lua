@@ -2,7 +2,87 @@ local colors = {}
 colors.get_colors = function()
     local mycolors = {} ---@type table<string,string>
 
-    if vim.o.background == 'dark' then
+    local style = require('theme.config').opts.style
+
+    if style == 'purple' then
+        mycolors = {
+            vscNone = 'NONE',
+            vscFront = '#d4d4d8',
+            vscBack = '#12101a',
+
+            vscTabCurrent = '#12101a',
+            vscTabOther = '#1e1930',
+            vscTabOutside = '#1a1528',
+
+            vscLeftDark = '#1e1930',
+            vscLeftMid = '#252040',
+            vscLeftLight = '#4c1d95',
+
+            vscPopupFront = '#d4d4d8',
+            vscPopupBack = '#1e1930',
+            vscPopupHighlightBlue = '#7c3aed',
+            vscPopupHighlightGray = '#2d2540',
+
+            vscSplitLight = '#4c1d95',
+            vscSplitDark = '#252040',
+            vscSplitThumb = '#2d2540',
+
+            vscCursorDarkDark = '#1e1930',
+            vscCursorDark = '#9ca3af',
+            vscCursorLight = '#d4d4d8',
+            vscSelection = '#3d2070',
+            vscLineNumber = '#9ca3af',
+
+            vscDiffRedDark = '#3d1520',
+            vscDiffRedLight = '#6b2030',
+            vscDiffRedLightLight = '#e94560',
+            vscDiffGreenDark = '#1a3028',
+            vscDiffGreenLight = '#2d4a3e',
+            vscSearchCurrent = '#4c1d95',
+            vscSearch = '#7c3aed',
+
+            vscGitAdded = '#81b88b',
+            vscGitModified = '#e2c08d',
+            vscGitDeleted = '#c74e39',
+            vscGitRenamed = '#73c991',
+            vscGitUntracked = '#73c991',
+            vscGitIgnored = '#8c8c8c',
+            vscGitStageModified = '#e2c08d',
+            vscGitStageDeleted = '#c74e39',
+            vscGitConflicting = '#e4676b',
+            vscGitSubmodule = '#8db9e2',
+
+            vscContext = '#2d2540',
+            vscContextCurrent = '#4c1d95',
+
+            vscFoldBackground = '#1e1930',
+
+            vscSuggestion = '#9ca3af',
+
+            -- Syntax colors
+            vscGray = '#808080',
+            vscViolet = '#646695',
+            vscBlue = '#569CD6',
+            vscAccentBlue = '#4FC1FF',
+            vscDarkBlue = '#223E55',
+            vscMediumBlue = '#18a2fe',
+            vscDisabledBlue = '#729DB3',
+            vscLightBlue = '#9CDCFE',
+            vscGreen = '#6A9955',
+            vscBlueGreen = '#4EC9B0',
+            vscLightGreen = '#B5CEA8',
+            vscRed = '#F44747',
+            vscOrange = '#CE9178',
+            vscLightRed = '#D16969',
+            vscYellowOrange = '#D7BA7D',
+            vscYellow = '#DCDCAA',
+            vscDarkYellow = '#FFD602',
+            vscPink = '#C586C0',
+
+            -- Low contrast with default background
+            vscDimHighlight = '#2d2540',
+        }
+    elseif vim.o.background == 'dark' then
         mycolors = {
             vscNone = 'NONE',
             vscFront = '#D4D4D4',
