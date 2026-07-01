@@ -3,6 +3,11 @@ vim.g.maplocalleader = " "
 
 vim.o.termguicolors = true
 
+-- Use built-in folding (indent-based) instead of external Treesitter folding.
+vim.opt.foldmethod = "indent"
+vim.opt.foldminlines = 50
+vim.opt.foldlevel = 0
+
 local theme = require("theme")
 theme.setup({
 	style = "purple",

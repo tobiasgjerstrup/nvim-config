@@ -11,7 +11,6 @@ Small Neovim setup built on top of `lazy.nvim`.
 - `nvim-lspconfig` + `mason.nvim` + `mason-lspconfig.nvim` for LSP setup
 - `nvim-cmp` + `LuaSnip` for completion
 - `copilot.lua` for GitHub Copilot ghost-text suggestions
-- `nvim-treesitter` for syntax highlighting and indentation
 
 ## Requirements
 
@@ -93,12 +92,6 @@ git clone <your-repo-url> "$env:LOCALAPPDATA/nvim"
 If lazy is not installed, run
 ```powershell
 git clone --filter=blob:none https://github.com/folke/lazy.nvim.git --branch=stable "$env:LOCALAPPDATA\nvim-data\lazy\lazy.nvim"
-```
-
-if treesitter is giving you issues and you have GCC installed, run
-```powershell
-setx CC gcc
-setx CXX g++
 ```
 
 if you want nvim to be in a different path, create a symlink with
